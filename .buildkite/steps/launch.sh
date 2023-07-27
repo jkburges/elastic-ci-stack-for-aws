@@ -105,10 +105,6 @@ make "mappings-for-${os}-${arch}-image" build/aws-stack.yml "IMAGE_ID=$image_id"
 echo "--- Validating templates"
 make validate
 
+echo "$stack_name"
+
 exit 15
-
-echo "--- Creating stack ${stack_name}"
-make create-stack "STACK_NAME=$stack_name" "SERVICE_ROLE=$service_role"
-
-echo "+++ ⌛️ Waiting for update to complete"
-./parfait watch-stack "${stack_name}"
