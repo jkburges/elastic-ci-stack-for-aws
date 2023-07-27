@@ -99,6 +99,9 @@ cat << EOF > config.json
 ]
 EOF
 
+echo "--- Validate latest"
+aws cloudformation validate-template --template-url https://s3.amazonaws.com/buildkite-aws-stack/latest/aws-stack.yml
+
 echo "--- Building templates"
 make "mappings-for-${os}-${arch}-image" build/aws-stack.yml "IMAGE_ID=$image_id"
 
