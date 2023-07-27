@@ -99,14 +99,15 @@ cat << EOF > config.json
 ]
 EOF
 
+echo "--- Validate latest"
+aws --debug cloudformation validate-template --template-url https://s3.amazonaws.com/buildkite-aws-stack/latest/aws-stack.yml
+
 echo "--- Building templates"
 make "mappings-for-${os}-${arch}-image" build/aws-stack.yml "IMAGE_ID=$image_id"
 
 echo "--- Validating templates"
-# make validate
+make validate
 
-echo "--- Creating stack ${stack_name}"
-make create-stack "STACK_NAME=$stack_name" "SERVICE_ROLE=$service_role"
+echo "$stack_name"
 
-echo "+++ ⌛️ Waiting for update to complete"
-./parfait watch-stack "${stack_name}"
+exit 15
