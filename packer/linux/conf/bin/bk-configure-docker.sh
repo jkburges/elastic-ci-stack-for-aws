@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 
 on_error() {
-  echo "Exited $? because of error on line $1" >&2
+  echo "Exited $? from ${BASH_SOURCE[0]} because of error on line $1" >&2
 }
 
 trap 'on_error $LINENO' ERR
