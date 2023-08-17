@@ -21,8 +21,8 @@ if [[ "${BUILDKITE_ENABLE_INSTANCE_STORAGE:-false}" != "true" ]]; then
   exit 0
 fi
 
-#shellcheck disable=SC2207
-devices=($(nvme list | grep "Amazon EC2 NVMe Instance Storage" | cut -f1 -d' '))
+echo Reading Instance Storage NVMe devices >&2
+nvme list | grep "Amazon EC2 NVMe Instance Storage" | cut -f1 -d' ' | readarray -t devices
 
 if [[ -z "${devices[*]}" ]]; then
   echo "No Instance Storage NVMe drives to mount" >&2
