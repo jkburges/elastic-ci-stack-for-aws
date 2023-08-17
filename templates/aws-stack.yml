@@ -1205,8 +1205,8 @@ Resources:
                   --==BOUNDARY==
                   Content-Type: text/x-shellscript; charset="us-ascii"
                   #!/bin/bash -v
-                  DOCKER_USERNS_REMAP=${EnableDockerUserNamespaceRemap} \
-                  DOCKER_EXPERIMENTAL=${EnableDockerExperimental} \
+                  DOCKER_USERNS_REMAP="${EnableDockerUserNamespaceRemap}" \
+                  DOCKER_EXPERIMENTAL="${EnableDockerExperimental}" \
                   BUILDKITE_ENABLE_INSTANCE_STORAGE="${EnableInstanceStorage}" \
                     /usr/local/bin/bk-configure-docker.sh
                   --==BOUNDARY==
