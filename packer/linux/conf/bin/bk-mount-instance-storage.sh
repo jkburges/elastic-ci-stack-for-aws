@@ -72,3 +72,5 @@ if [[ ! -f /etc/fstab.backup ]]; then
 else
   echo Not writing fstab, fstab.backup already exists >&2
 fi
+
+echo "${BASH_SOURCE[0]} completed successfully" >&2

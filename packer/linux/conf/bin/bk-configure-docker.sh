@@ -65,7 +65,7 @@ new_daemon_json="$(jq '."default-address-pools"=[{"base":"172.17.0.0/12","size":
 cat <<<"$new_daemon_json" > /etc/docker/daemon.json
 
 # See https://docs.docker.com/build/building/multi-platform/
-echo Installing qemu binfmt for multiarch...
+echo Installing qemu binfmt for multiarch... >&2
 docker run \
   --privileged \
   --userns=host \
@@ -78,3 +78,5 @@ systemctl start docker-low-disk-gc.service
 
 echo Restarting docker... >&2
 systemctl restart docker
+
+echo "${BASH_SOURCE[0]} completed successfully" >&2
