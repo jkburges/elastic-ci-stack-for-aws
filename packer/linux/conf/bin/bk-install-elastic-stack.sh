@@ -1,5 +1,6 @@
-#!/bin/bash
-set -euxo pipefail
+#!/usr/bin/env bash
+
+set -Eeuxo pipefail
 
 ## Installs the Buildkite Agent, run from the CloudFormation template
 
@@ -31,8 +32,8 @@ trap 'on_error $LINENO' ERR
 STATUS_FILE=/var/log/elastic-stack-bootstrap-status
 
 check_status() {
-  if [[ -f ${STATUS_FILE} ]] ; then
-    if [[ "$(< ${STATUS_FILE})" == "Completed" ]] ; then
+  if [[ -f ${STATUS_FILE} ]]; then
+    if [[ "$(< ${STATUS_FILE})" == "Completed" ]]; then
       echo "Bootstrap already completed successfully"
       exit 0
     else
@@ -46,7 +47,7 @@ check_status() {
 
 check_status
 
-case $(uname -m) in
+case "$(uname -m)" in
   x86_64)    ARCH=amd64;;
   aarch64)   ARCH=arm64;;
   *)         ARCH=unknown;;

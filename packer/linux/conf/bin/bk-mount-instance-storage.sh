@@ -1,5 +1,12 @@
-#!/bin/bash
-set -euxo pipefail
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+on_error() {
+  echo "Exited $? because of error on line $1" >&2
+}
+
+trap 'on_error $LINENO' ERR
 
 # Write to system console and to our log file
 # See https://alestic.com/2010/12/ec2-user-data-output/
@@ -8,18 +15,21 @@ exec > >(tee -a /var/log/elastic-stack.log | logger -t user-data -s 2>/dev/conso
 # Mount instance storage if we can
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html
 
+echo "Checking for instance storage" >&2
 if [[ "${BUILDKITE_ENABLE_INSTANCE_STORAGE:-false}" != "true" ]]; then
-  echo "Skipping mounting instance storage"
+  echo "Skipping mounting instance storage" >&2
   exit 0
 fi
 
 #shellcheck disable=SC2207
 devices=($(nvme list | grep "Amazon EC2 NVMe Instance Storage" | cut -f1 -d' '))
 
-if [ -z "${devices[*]}" ]; then
+if [[ -z "${devices[*]}" ]]; then
   echo "No Instance Storage NVMe drives to mount" >&2
   exit 0
 fi
+
+echo "Found ${#devices[@]} instance storage devices" >&2
 
 if [[ "${#devices[@]}" -eq 1 ]]; then
   echo "Mounting instance storage device directly" >&2
@@ -55,7 +65,10 @@ mount_options="defaults,noatime"
 mkdir -p "$devicemount"
 mount -t "${fs_type}" -o "${mount_options}" "$logicalname" "$devicemount"
 
-if [ ! -f /etc/fstab.backup ]; then
+if [[ ! -f /etc/fstab.backup ]]; then
+  echo Writing fstab >&2
   cp -rP /etc/fstab /etc/fstab.backup
   echo "$logicalname $devicemount    ${fs_type}  ${mount_options}  0 0" >> /etc/fstab
+else
+  echo Not writing fstab, fstab.backup already exists >&2
 fi
