@@ -260,6 +260,7 @@ check_docker() {
 check_docker
 
 # start buildkite-agent
+systemctl set-environment "BUILDKITE_TERMINATE_INSTANCE_AFTER_JOB=${BUILDKITE_TERMINATE_INSTANCE_AFTER_JOB}"
 systemctl enable --now buildkite-agent
 
 # let the stack know that this host has been initialized successfully
